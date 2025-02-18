@@ -1,0 +1,67 @@
+刷卡分期試算
+    
+        body { font-family: Arial, sans-serif; text-align: center; }
+        table { width: 50%; margin: 20px auto; border-collapse: collapse; }
+        th, td { border: 1px solid black; padding: 10px; }
+        th { background-color: orange; }
+        input { padding: 5px; font-size: 16px; }
+        button { padding: 8px 12px; font-size: 16px; margin: 5px; }
+    
+
+
+
+    <h2>刷卡分期試算</h2>
+    
+    輸入總金額：
+    
+    計算
+    清除
+
+    <table>
+        <tr>
+            <th>期數</th>
+            <th>總付款金額</th>
+            <th>每期付款</th>
+        </tr>
+        <tbody id="resultTable">
+        </tbody>
+    </table>
+
+    
+        function calculate() {
+            let amount = parseFloat(document.getElementById("amount").value);
+            if (isNaN(amount) || amount &lt;= 0) {
+                alert(&quot;請輸入有效的金額！&quot;);
+                return;
+            }
+
+            let rates = {
+                &quot;一次付清&quot;: 0.975,
+                &quot;3期&quot;: 0.971,
+                &quot;6期&quot;: 0.965,
+                &quot;9期&quot;: 0.96,
+                &quot;12期&quot;: 0.935,
+                &quot;18期&quot;: 0.91,
+                &quot;24期&quot;: 0.89,
+                &quot;30期&quot;: 0.87
+            };
+
+            let tableContent = &quot;&quot;;
+            for (let term in rates) {
+                let totalPay = Math.round(amount / rates[term]);
+                let termNumber = parseInt(term.replace(/\D/g, &quot;&quot;)) || 1;
+                let perMonth = Math.round(totalPay / termNumber);
+                tableContent += `<tr>
+                                    <td>${term}</td>
+                                    <td>${totalPay}</td>
+                                    <td>${perMonth}</td>
+                                </tr>`;
+            }
+
+            document.getElementById("resultTable").innerHTML = tableContent;
+        }
+
+        function clearFields() {
+            document.getElementById("amount").value = "";
+            document.getElementById("resultTable").innerHTML = "";
+        }
